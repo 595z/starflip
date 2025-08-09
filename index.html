@@ -62,143 +62,216 @@
     </style>
 </head>
 <body>
-    <header>
-        <img src="assets/logo.png" alt="PulseFlip Logo" class="logo" />
-        <nav>
-            <a href="mines.html">Mines</a>
-            <a href="towers.html">Towers</a>
-            <div id="auth-container" class="auth-buttons">
-                <input type="email" id="email" placeholder="Email" />
-                <input type="password" id="password" placeholder="Password" />
-                <button id="signup" class="action-btn">Sign Up</button>
-                <button id="login" class="action-btn">Log In</button>
-            </div>
-            <div id="wallet-container" class="wallet" style="display:none;">
-                <div id="wallet-balance" class="wallet-balance" title="Click to refresh balance">$0.00</div>
-                <div class="wallet-actions">
-                    <button id="deposit">Deposit</button>
-                    <button id="withdraw">Withdraw</button>
-                    <button id="logout">Log Out</button>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <main class="center">
-        <h1>Welcome to StarFlip</h1>
-        <p>Choose a game to start playing:</p>
-        <div class="game-buttons">
-            <a href="mines.html" class="game-btn">Play Mines</a>
-            <a href="towers.html" class="game-btn">Play Towers</a>
+  <header>
+    <img src="assets/logo.png" alt="PulseFlip Logo" class="logo" />
+    <nav>
+      <a href="mines.html">Mines</a>
+      <a href="towers.html">Towers</a>
+      <div id="wallet-container" class="wallet" style="display:none;">
+        <div id="wallet-balance" class="wallet-balance" title="Click to refresh balance">$0.00</div>
+        <div class="wallet-actions">
+          <button id="deposit">Deposit</button>
+          <button id="withdraw">Withdraw</button>
+          <button id="logout">Log Out</button>
         </div>
-    </main>
+      </div>
+    </nav>
+  </header>
+
+  <main class="center">
+    <h1>Welcome to StarFlip</h1>
+    <p>Choose a game to start playing:</p>
+    <div class="game-buttons">
+      <a href="mines.html" class="game-btn">Play Mines</a>
+      <a href="towers.html" class="game-btn">Play Towers</a>
+    </div>
+  </main>
+
+  <!-- Blur overlay -->
+  <div id="blur-overlay" style="
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    z-index: 9998;
+    display: none;"></div>
+
+  <!-- Login/Signup modal -->
+  <div id="auth-modal" style="
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #00ffff;
+    color: white;
+    z-index: 9999;
+    width: 320px;
+    display: none;
+    font-family: Arial, sans-serif;
+  ">
+    <h2 id="auth-title">Log In</h2>
+    <input type="email" id="modal-email" placeholder="Email" style="
+      width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 8px; border: none; outline: none;
+      background: rgba(255,255,255,0.1); color: white;
+    "/>
+    <input type="password" id="modal-password" placeholder="Password" style="
+      width: 100%; margin-bottom: 15px; padding: 10px; border-radius: 8px; border: none; outline: none;
+      background: rgba(255,255,255,0.1); color: white;
+    "/>
+    <button id="auth-submit" class="action-btn" style="width: 100%; margin-bottom: 10px;">Log In</button>
+    <div style="text-align:center;">
+      <a href="#" id="toggle-auth" style="color:#00ffff; cursor:pointer; text-decoration: underline;">Don't have an account? Sign Up</a>
+    </div>
+  </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-        from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc }
-        from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc }
+      from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // Firebase config
-    const firebaseConfig = {
-        apiKey: "AIzaSyDUknxxv0drQKnsrfFa5bmmUCLynh17Z0A",
-        authDomain: "starflip-24c3c.firebaseapp.com",
-        projectId: "starflip-24c3c",
-        storageBucket: "starflip-24c3c.firebasestorage.app",
-        messagingSenderId: "434220085337",
-        appId: "1:434220085337:web:4558bb9a1241bd19940148",
-        measurementId: "G-9PF8N00DQD"
-    };
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDUknxxv0drQKnsrfFa5bmmUCLynh17Z0A",
+    authDomain: "starflip-24c3c.firebaseapp.com",
+    projectId: "starflip-24c3c",
+    storageBucket: "starflip-24c3c.firebasestorage.app",
+    messagingSenderId: "434220085337",
+    appId: "1:434220085337:web:4558bb9a1241bd19940148",
+    measurementId: "G-9PF8N00DQD"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    let currentUserDoc = null;
-    let balance = 0;
+  let balance = 0;
 
-    async function loadBalance(uid) {
-        const userDoc = await getDoc(doc(db, "users", uid));
-        if (userDoc.exists()) {
-            balance = userDoc.data().balance;
-        } else {
-            balance = 0;
-            await setDoc(doc(db, "users", uid), { balance: 0 });
-        }
-        updateBalanceDisplay();
+  // Elements
+  const authModal = document.getElementById("auth-modal");
+  const blurOverlay = document.getElementById("blur-overlay");
+  const authTitle = document.getElementById("auth-title");
+  const emailInput = document.getElementById("modal-email");
+  const passwordInput = document.getElementById("modal-password");
+  const authSubmit = document.getElementById("auth-submit");
+  const toggleAuthLink = document.getElementById("toggle-auth");
+
+  const walletContainer = document.getElementById("wallet-container");
+
+  // Show modal + blur
+  function showAuthModal() {
+    blurOverlay.style.display = "block";
+    authModal.style.display = "block";
+  }
+  // Hide modal + blur
+  function hideAuthModal() {
+    blurOverlay.style.display = "none";
+    authModal.style.display = "none";
+  }
+
+  // Load balance from Firestore
+  async function loadBalance(uid) {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) {
+      balance = userDoc.data().balance || 0;
+    } else {
+      balance = 0;
+      await setDoc(doc(db, "users", uid), { balance: 0 });
     }
+    updateBalanceDisplay();
+  }
 
-    function updateBalanceDisplay() {
-        document.getElementById("wallet-balance").textContent = `$${balance.toFixed(2)}`;
+  function updateBalanceDisplay() {
+    document.getElementById("wallet-balance").textContent = `$${balance.toFixed(2)}`;
+  }
+
+  // Current mode: "login" or "signup"
+  let authMode = "login";
+
+  // Toggle between login and signup forms in modal
+  toggleAuthLink.addEventListener("click", e => {
+    e.preventDefault();
+    if (authMode === "login") {
+      authMode = "signup";
+      authTitle.textContent = "Sign Up";
+      authSubmit.textContent = "Sign Up";
+      toggleAuthLink.textContent = "Already have an account? Log In";
+    } else {
+      authMode = "login";
+      authTitle.textContent = "Log In";
+      authSubmit.textContent = "Log In";
+      toggleAuthLink.textContent = "Don't have an account? Sign Up";
     }
+    // Clear inputs
+    emailInput.value = "";
+    passwordInput.value = "";
+  });
 
-    // Sign up
-    document.getElementById("signup").addEventListener("click", async () => {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        if (!email || !password) return alert("Please fill in all fields");
+  // Handle submit (login or signup)
+  authSubmit.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      alert("Please fill in all fields");
+      return;
+    }
+    try {
+      if (authMode === "signup") {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "users", userCredential.user.uid), { balance: 0 });
+        alert("Account created successfully!");
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  });
 
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(db, "users", userCredential.user.uid), { balance: 0 });
-            alert("Account created!");
-        } catch (err) {
-            alert(err.message);
-        }
-    });
+  // Log out button
+  document.getElementById("logout").addEventListener("click", async () => {
+    await signOut(auth);
+  });
 
-    // Log in
-    document.getElementById("login").addEventListener("click", async () => {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-        if (!email || !password) return alert("Please fill in all fields");
+  // Deposit
+  document.getElementById("deposit").addEventListener("click", async () => {
+    const amountStr = prompt("Enter amount to deposit:", "10");
+    const amount = parseFloat(amountStr);
+    if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
 
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (err) {
-            alert(err.message);
-        }
-    });
+    balance += amount;
+    await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
+    updateBalanceDisplay();
+  });
 
-    // Log out
-    document.getElementById("logout").addEventListener("click", async () => {
-        await signOut(auth);
-    });
+  // Withdraw
+  document.getElementById("withdraw").addEventListener("click", async () => {
+    const amountStr = prompt("Enter amount to withdraw:", "10");
+    const amount = parseFloat(amountStr);
+    if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
+    if (amount > balance) return alert("Insufficient funds");
 
-    // Deposit
-    document.getElementById("deposit").addEventListener("click", async () => {
-        const amountStr = prompt("Enter amount to deposit:", "10");
-        const amount = parseFloat(amountStr);
-        if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
+    balance -= amount;
+    await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
+    updateBalanceDisplay();
+  });
 
-        balance += amount;
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
-        updateBalanceDisplay();
-    });
-
-    // Withdraw
-    document.getElementById("withdraw").addEventListener("click", async () => {
-        const amountStr = prompt("Enter amount to withdraw:", "10");
-        const amount = parseFloat(amountStr);
-        if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
-        if (amount > balance) return alert("Insufficient funds");
-
-        balance -= amount;
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
-        updateBalanceDisplay();
-    });
-
-    // Auth state changes
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            document.getElementById("auth-container").style.display = "none";
-            document.getElementById("wallet-container").style.display = "flex";
-            await loadBalance(user.uid);
-        } else {
-            document.getElementById("wallet-container").style.display = "none";
-            document.getElementById("auth-container").style.display = "flex";
-        }
-    });
+  // Auth state listener
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // User logged in
+      walletContainer.style.display = "flex";
+      await loadBalance(user.uid);
+      hideAuthModal();
+    } else {
+      // No user, show modal
+      walletContainer.style.display = "none";
+      showAuthModal();
+    }
+  });
 </script>
 </body>
 </html>
