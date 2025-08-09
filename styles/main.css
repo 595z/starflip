@@ -1,10 +1,10 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(-45deg, #0f0f0f, #120043, #320054, #000f2f);
+    background: linear-gradient(-45deg, #000000, #1a0000, #330000, #000000);
     background-size: 400% 400%;
     animation: animateBackground 20s ease infinite;
-    color: white;
+    color: #ff3b3b;
     text-align: center;
 }
 
@@ -19,9 +19,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(20, 20, 30, 0.7);
+    background: rgba(30, 0, 0, 0.8);
     padding: 1em 2em;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 15px rgba(255, 59, 59, 0.6);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -34,26 +34,28 @@ header {
 
 .logo {
     height: 50px;
+    filter: drop-shadow(0 0 5px #ff3b3b);
 }
 
 nav a, .connect-wallet {
     margin: 0 10px;
-    color: #00ffff;
+    color: #ff3b3b;
     text-decoration: none;
     font-weight: bold;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid #00ffff;
+    background: rgba(255, 59, 59, 0.1);
+    border: 1px solid #ff3b3b;
     padding: 8px 16px;
     border-radius: 8px;
     backdrop-filter: blur(8px);
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0,255,255,0.3);
+    box-shadow: 0 0 12px rgba(255, 59, 59, 0.5);
 }
 
 nav a:hover, .connect-wallet:hover {
-    background: #00ffff;
+    background: #ff3b3b;
     color: #000;
     transform: scale(1.05);
+    box-shadow: 0 0 20px #ff3b3b;
 }
 
 .center {
@@ -61,7 +63,7 @@ nav a:hover, .connect-wallet:hover {
 }
 
 .brand {
-    background: linear-gradient(90deg, #00ffff, #ff00ff);
+    background: linear-gradient(90deg, #ff3b3b, #8b0000);
     -webkit-background-clip: text;
     color: transparent;
     font-weight: bold;
@@ -77,33 +79,35 @@ nav a:hover, .connect-wallet:hover {
 
 .game-btn {
     padding: 1em 2em;
-    background: rgba(255,255,255,0.05);
-    border: 2px solid #00ffff;
+    background: rgba(255, 59, 59, 0.1);
+    border: 2px solid #ff3b3b;
     border-radius: 12px;
-    color: #00ffff;
+    color: #ff3b3b;
     font-size: 1.2em;
     text-decoration: none;
     font-weight: bold;
     backdrop-filter: blur(6px);
     transition: all 0.4s ease;
-    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    box-shadow: 0 0 15px rgba(255, 59, 59, 0.4);
 }
 
 .game-btn.secondary {
-    border-color: #ff00ff;
-    color: #ff00ff;
-    box-shadow: 0 0 15px rgba(255,0,255,0.3);
+    border-color: #8b0000;
+    color: #8b0000;
+    box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
 }
 
 .game-btn:hover {
-    background: #00ffff;
+    background: #ff3b3b;
     color: black;
     transform: scale(1.08);
+    box-shadow: 0 0 25px #ff3b3b;
 }
 
 .game-btn.secondary:hover {
-    background: #ff00ff;
+    background: #8b0000;
     color: black;
+    box-shadow: 0 0 25px #8b0000;
 }
 
 @media (max-width: 600px) {
