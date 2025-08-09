@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <title>PulseFlip Casino</title>
     <link rel="stylesheet" href="styles/main.css" />
     <style>
-        /* Add/override styles for auth and wallet */
+        /* Keep your original styles */
         .auth-buttons, .wallet {
             display: flex;
             gap: 10px;
@@ -67,17 +68,17 @@
             <a href="mines.html">Mines</a>
             <a href="towers.html">Towers</a>
             <div id="auth-container" class="auth-buttons">
-                <input type="text" id="username" placeholder="Username" />
+                <input type="email" id="email" placeholder="Email" />
                 <input type="password" id="password" placeholder="Password" />
-                <button onclick="signup()" class="action-btn">Sign Up</button>
-                <button onclick="login()" class="action-btn">Log In</button>
+                <button id="signup" class="action-btn">Sign Up</button>
+                <button id="login" class="action-btn">Log In</button>
             </div>
             <div id="wallet-container" class="wallet" style="display:none;">
                 <div id="wallet-balance" class="wallet-balance" title="Click to refresh balance">$0.00</div>
                 <div class="wallet-actions">
-                    <button onclick="deposit()">Deposit</button>
-                    <button onclick="withdraw()">Withdraw</button>
-                    <button onclick="logout()">Log Out</button>
+                    <button id="deposit">Deposit</button>
+                    <button id="withdraw">Withdraw</button>
+                    <button id="logout">Log Out</button>
                 </div>
             </div>
         </nav>
@@ -91,106 +92,114 @@
         </div>
     </main>
 
-<script>
-    // Mock database for demo only
-    const usersDB = {};
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+        from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc }
+        from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // Track logged-in user and balance in memory
-    let currentUser = null;
+    // Firebase config
+    const firebaseConfig = {
+        apiKey: "AIzaSyDUknxxv0drQKnsrfFa5bmmUCLynh17Z0A",
+        authDomain: "starflip-24c3c.firebaseapp.com",
+        projectId: "starflip-24c3c",
+        storageBucket: "starflip-24c3c.firebasestorage.app",
+        messagingSenderId: "434220085337",
+        appId: "1:434220085337:web:4558bb9a1241bd19940148",
+        measurementId: "G-9PF8N00DQD"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUserDoc = null;
     let balance = 0;
 
-    function signup() {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
-        if (!username || !password) {
-            alert("Please enter both username and password.");
-            return;
+    async function loadBalance(uid) {
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+            balance = userDoc.data().balance;
+        } else {
+            balance = 0;
+            await setDoc(doc(db, "users", uid), { balance: 0 });
         }
-        if (usersDB[username]) {
-            alert("Username already taken.");
-            return;
-        }
-        usersDB[username] = { password, balance: 0 };
-        alert("Signup successful! Please log in.");
-        clearInputs();
-    }
-
-    function login() {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
-        if (!username || !password) {
-            alert("Please enter both username and password.");
-            return;
-        }
-        if (!usersDB[username] || usersDB[username].password !== password) {
-            alert("Invalid username or password.");
-            return;
-        }
-        currentUser = username;
-        balance = usersDB[username].balance;
-        showWallet();
-        clearInputs();
-    }
-
-    function logout() {
-        currentUser = null;
-        balance = 0;
-        showAuth();
-    }
-
-    function showWallet() {
-        document.getElementById("auth-container").style.display = "none";
-        document.getElementById("wallet-container").style.display = "flex";
-        updateBalanceDisplay();
-    }
-
-    function showAuth() {
-        document.getElementById("wallet-container").style.display = "none";
-        document.getElementById("auth-container").style.display = "flex";
         updateBalanceDisplay();
     }
 
     function updateBalanceDisplay() {
-        const balanceEl = document.getElementById("wallet-balance");
-        balanceEl.textContent = `$${balance.toFixed(2)}`;
+        document.getElementById("wallet-balance").textContent = `$${balance.toFixed(2)}`;
     }
 
-    function deposit() {
-        if (!currentUser) return;
+    // Sign up
+    document.getElementById("signup").addEventListener("click", async () => {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        if (!email || !password) return alert("Please fill in all fields");
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, "users", userCredential.user.uid), { balance: 0 });
+            alert("Account created!");
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    // Log in
+    document.getElementById("login").addEventListener("click", async () => {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        if (!email || !password) return alert("Please fill in all fields");
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    // Log out
+    document.getElementById("logout").addEventListener("click", async () => {
+        await signOut(auth);
+    });
+
+    // Deposit
+    document.getElementById("deposit").addEventListener("click", async () => {
         const amountStr = prompt("Enter amount to deposit:", "10");
         const amount = parseFloat(amountStr);
-        if (isNaN(amount) || amount <= 0) {
-            alert("Invalid deposit amount.");
-            return;
-        }
-        balance += amount;
-        usersDB[currentUser].balance = balance;
-        updateBalanceDisplay();
-        alert(`Deposited $${amount.toFixed(2)} successfully.`);
-    }
+        if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
 
-    function withdraw() {
-        if (!currentUser) return;
+        balance += amount;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
+        updateBalanceDisplay();
+    });
+
+    // Withdraw
+    document.getElementById("withdraw").addEventListener("click", async () => {
         const amountStr = prompt("Enter amount to withdraw:", "10");
         const amount = parseFloat(amountStr);
-        if (isNaN(amount) || amount <= 0) {
-            alert("Invalid withdrawal amount.");
-            return;
-        }
-        if (amount > balance) {
-            alert("Insufficient balance.");
-            return;
-        }
-        balance -= amount;
-        usersDB[currentUser].balance = balance;
-        updateBalanceDisplay();
-        alert(`Withdrew $${amount.toFixed(2)} successfully.`);
-    }
+        if (isNaN(amount) || amount <= 0) return alert("Invalid amount");
+        if (amount > balance) return alert("Insufficient funds");
 
-    function clearInputs() {
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-    }
+        balance -= amount;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
+        updateBalanceDisplay();
+    });
+
+    // Auth state changes
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            document.getElementById("auth-container").style.display = "none";
+            document.getElementById("wallet-container").style.display = "flex";
+            await loadBalance(user.uid);
+        } else {
+            document.getElementById("wallet-container").style.display = "none";
+            document.getElementById("auth-container").style.display = "flex";
+        }
+    });
 </script>
 </body>
 </html>
+
