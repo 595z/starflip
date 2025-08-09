@@ -10,16 +10,12 @@
   <input type="password" id="password" placeholder="Password"><br>
   <button id="signup">Sign Up</button>
   <button id="login">Log In</button>
-  <button id="logout">Log Out</button>
 
   <script type="module">
-    // Import from Firebase CDN
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged }
       from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    // Your config
     const firebaseConfig = {
       apiKey: "AIzaSyDUknxxv0drQKnsrfFa5bmmUCLynh17Z0A",
       authDomain: "starflip-24c3c.firebaseapp.com",
@@ -30,22 +26,25 @@
       measurementId: "G-9PF8N00DQD"
     };
 
-    // Init Firebase
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
+
+    // If already logged in → go straight to game
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        window.location.href = "index.html";
+      }
+    });
 
     // Sign up
     document.getElementById("signup").addEventListener("click", () => {
       let email = document.getElementById("email").value;
       let password = document.getElementById("password").value;
       createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          alert("Account created: " + userCredential.user.email);
+        .then(() => {
+          window.location.href = "index.html";
         })
-        .catch(error => {
-          alert(error.message);
-        });
+        .catch(error => alert(error.message));
     });
 
     // Log in
@@ -53,20 +52,12 @@
       let email = document.getElementById("email").value;
       let password = document.getElementById("password").value;
       signInWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          alert("Welcome back: " + userCredential.user.email);
+        .then(() => {
+          window.location.href = "index.html";
         })
-        .catch(error => {
-          alert(error.message);
-        });
-    });
-
-    // Log out
-    document.getElementById("logout").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        alert("Logged out");
-      });
+        .catch(error => alert(error.message));
     });
   </script>
 </body>
 </html>
+
