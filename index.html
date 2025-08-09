@@ -3,320 +3,419 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>StarFlip - Home</title>
+<title>Crypto Gambling - Login & Dashboard</title>
 <style>
-  /* Your entire CSS pasted here */
+  /* Dark red and black theme */
   body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(-45deg, #0f0f0f, #120043, #320054, #000f2f);
-      background-size: 400% 400%;
-      animation: animateBackground 20s ease infinite;
-      color: white;
-      text-align: center;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(-45deg, #1a0000, #330000, #660000, #110000);
+    background-size: 400% 400%;
+    animation: animateBackground 25s ease infinite;
+    color: #f5f5f5;
+    text-align: center;
+    overflow-x: hidden;
   }
   @keyframes animateBackground {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
   }
+
   header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(20, 20, 30, 0.7);
-      padding: 1em 2em;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(30, 0, 0, 0.8);
+    padding: 1em 2em;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.7);
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
+
   .logo-container {
-      display: flex;
-      align-items: center;
+    display: flex;
+    align-items: center;
   }
   .logo {
-      height: 50px;
+    height: 50px;
   }
-  nav a, .connect-wallet {
-      margin: 0 10px;
-      color: #00ffff;
-      text-decoration: none;
-      font-weight: bold;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid #00ffff;
-      padding: 8px 16px;
-      border-radius: 8px;
-      backdrop-filter: blur(8px);
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0,255,255,0.3);
+
+  nav a, .btn {
+    margin: 0 10px;
+    color: #ff4444;
+    text-decoration: none;
+    font-weight: bold;
+    background: rgba(255, 68, 68, 0.1);
+    border: 1.5px solid #ff4444;
+    padding: 8px 18px;
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+    cursor: pointer;
   }
-  nav a:hover, .connect-wallet:hover {
-      background: #00ffff;
-      color: #000;
-      transform: scale(1.05);
+  nav a:hover, .btn:hover {
+    background: #ff4444;
+    color: black;
+    transform: scale(1.07);
   }
-  .center {
-      margin-top: 4em;
+
+  /* Login Screen */
+  #login-screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(25,0,0,0.9);
+    padding: 1em;
   }
-  .brand {
-      background: linear-gradient(90deg, #00ffff, #ff00ff);
-      -webkit-background-clip: text;
-      color: transparent;
-      font-weight: bold;
-      font-size: 3em;
-      animation: pulse 3s infinite alternate;
+
+  #login-screen h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+    color: #ff5555;
+    text-shadow: 0 0 10px #ff2222;
   }
-  @keyframes pulse {
-      0% { filter: drop-shadow(0 0 5px #00ffff);}
-      100% { filter: drop-shadow(0 0 20px #ff00ff);}
+
+  #login-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
   }
+
+  #login-form input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #ff4444;
+    color: #fff;
+    font-size: 1.1em;
+    padding: 10px;
+    margin-bottom: 1em;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  #login-form input:focus {
+    border-color: #ff8888;
+  }
+
+  #login-form button {
+    background: #ff4444;
+    border: none;
+    padding: 12px;
+    color: black;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff4444;
+    transition: background 0.3s ease;
+  }
+  #login-form button:hover {
+    background: #ff2222;
+  }
+
+  /* Main App UI */
+  #app {
+    display: none;
+    padding: 2em 1em 5em;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  #balance {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    color: #ff6666;
+    text-shadow: 0 0 7px #ff4444;
+  }
+
   .game-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5em;
-      margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5em;
+    margin-top: 1.5em;
   }
   .game-btn {
-      padding: 1em 2em;
-      background: rgba(255,255,255,0.05);
-      border: 2px solid #00ffff;
-      border-radius: 12px;
-      color: #00ffff;
-      font-size: 1.2em;
-      text-decoration: none;
-      font-weight: bold;
-      backdrop-filter: blur(6px);
-      transition: all 0.4s ease;
-      box-shadow: 0 0 15px rgba(0,255,255,0.3);
-  }
-  .game-btn.secondary {
-      border-color: #ff00ff;
-      color: #ff00ff;
-      box-shadow: 0 0 15px rgba(255,0,255,0.3);
+    padding: 1em 2em;
+    background: rgba(255, 68, 68, 0.1);
+    border: 2px solid #ff4444;
+    border-radius: 15px;
+    color: #ff6666;
+    font-size: 1.3em;
+    font-weight: bold;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.7);
+    cursor: pointer;
   }
   .game-btn:hover {
-      background: #00ffff;
-      color: black;
-      transform: scale(1.08);
-  }
-  .game-btn.secondary:hover {
-      background: #ff00ff;
-      color: black;
-  }
-  @media (max-width: 600px) {
-      .game-buttons {
-          flex-direction: column;
-      }
-      nav {
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 0.5em;
-      }
-      .logo {
-          height: 40px;
-      }
-  }
-  
-  /* New deposit styles */
-  .deposit-section {
-    margin: 3em auto;
-    max-width: 320px;
-    background: rgba(255 255 255 / 0.1);
-    border-radius: 16px;
-    padding: 1.5em;
-    box-shadow: 0 0 20px #00ffffaa;
-    backdrop-filter: blur(12px);
-  }
-  .deposit-section h2 {
-    margin-bottom: 1em;
-    font-weight: bold;
-    font-size: 1.5em;
-    color: #00ffff;
-    text-shadow: 0 0 10px #00ffff;
-  }
-  #deposit-form label {
-    display: block;
-    text-align: left;
-    margin-top: 1em;
-    margin-bottom: 0.3em;
-    font-weight: 600;
-    color: #aaffff;
-  }
-  #deposit-form select, 
-  #deposit-form input {
-    width: 100%;
-    padding: 0.6em;
-    border-radius: 8px;
-    border: none;
-    font-size: 1em;
-    background: rgba(255 255 255 / 0.1);
-    color: white;
-    box-shadow: inset 0 0 6px #00ffff;
-    transition: box-shadow 0.3s ease;
-  }
-  #deposit-form select:focus,
-  #deposit-form input:focus {
-    outline: none;
-    box-shadow: 0 0 12px #00ffff;
-    background: rgba(0 255 255 / 0.15);
-  }
-  .deposit-btn {
-    margin-top: 1.5em;
-    width: 100%;
-    padding: 0.8em;
-    font-size: 1.2em;
-    font-weight: bold;
+    background: #ff4444;
     color: black;
-    background: #00ffff;
+    transform: scale(1.1);
+  }
+
+  /* Deposit and Withdraw */
+  #deposit-section, #withdraw-section {
+    margin-top: 2em;
+    padding: 1.5em;
+    background: rgba(255, 68, 68, 0.15);
+    border-radius: 15px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  label, select, input[type=number] {
+    font-size: 1.1em;
+    margin-bottom: 0.7em;
+    color: #ff9999;
+    display: block;
+    width: 100%;
+  }
+  select, input[type=number] {
+    padding: 0.7em;
+    border-radius: 10px;
+    border: 2px solid #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+    color: #fff;
+    outline: none;
+  }
+  select:focus, input[type=number]:focus {
+    border-color: #ff8888;
+  }
+  #deposit-btn, #withdraw-btn {
+    margin-top: 1em;
+    padding: 0.8em 1.5em;
+    background: #ff4444;
     border: none;
+    color: black;
+    font-weight: bold;
+    font-size: 1.1em;
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 0 20px #00ffff;
-    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 0 15px #ff4444;
+    transition: background 0.3s ease;
   }
-  .deposit-btn:hover {
-    background: #00bbbb;
-    transform: scale(1.05);
+  #deposit-btn:hover, #withdraw-btn:hover {
+    background: #ff2222;
   }
-  .deposit-message {
-    margin-top: 1em;
-    font-weight: 700;
-    min-height: 1.2em;
-  }
-  .balance-amount {
+
+  /* Withdraw side button */
+  #withdraw-toggle {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    background: #ff4444;
+    color: black;
+    padding: 15px 12px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     font-weight: bold;
-    font-size: 1.8em;
-    color: #00ffff;
-    text-shadow: 0 0 15px #00ffff;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff4444;
+    user-select: none;
+    transform: translateY(-50%);
+    z-index: 110;
   }
+
+  #withdraw-section {
+    position: fixed;
+    top: 50%;
+    right: -420px; /* hidden by default */
+    width: 400px;
+    background: rgba(255, 68, 68, 0.25);
+    box-shadow: 0 0 30px #ff4444;
+    transform: translateY(-50%);
+    transition: right 0.5s ease;
+    z-index: 109;
+  }
+  #withdraw-section.open {
+    right: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    #app {
+      padding: 1em 0.5em 4em;
+    }
+    .game-buttons {
+      flex-direction: column;
+    }
+    #withdraw-section {
+      width: 100vw;
+      right: -100vw;
+    }
+    #withdraw-section.open {
+      right: 0;
+    }
+  }
+
 </style>
 </head>
 <body>
-<header>
-  <div class="logo-container">
-    <img src="logo.png" alt="StarFlip Logo" class="logo" />
-    <h1 class="brand">StarFlip</h1>
+
+<!-- Login Screen -->
+<div id="login-screen">
+  <h1>Welcome Back</h1>
+  <form id="login-form">
+    <input type="text" id="username" placeholder="Username" required autocomplete="off" />
+    <input type="password" id="password" placeholder="Password" required autocomplete="off" />
+    <button type="submit">Log In</button>
+  </form>
+</div>
+
+<!-- Main App -->
+<div id="app" aria-hidden="true">
+  <header>
+    <div class="logo-container">
+      <img src="https://i.imgur.com/IQzR1gP.png" alt="Crypto Logo" class="logo" />
+      <h2 style="color:#ff4444; margin-left:10px;">CryptoGamble</h2>
+    </div>
+    <nav>
+      <span id="balance">Balance: 0.00 LTC</span>
+      <button class="btn" id="deposit-toggle">Deposit</button>
+    </nav>
+  </header>
+
+  <div id="deposit-section" style="display:none;">
+    <h3>Deposit Crypto</h3>
+    <label for="crypto-select">Select Crypto</label>
+    <select id="crypto-select">
+      <option value="LTC">Litecoin (LTC)</option>
+      <option value="BTC">Bitcoin (BTC)</option>
+      <option value="SOL">Solana (SOL)</option>
+    </select>
+    <label for="deposit-amount">Amount</label>
+    <input type="number" id="deposit-amount" min="0.01" step="0.01" placeholder="0.00" />
+    <button id="deposit-btn">Deposit</button>
   </div>
-  <nav>
-    <a href="#" id="logout-btn" style="display:none;">Logout</a>
-    <a href="#" id="login-btn">Login</a>
-  </nav>
-</header>
 
-<main class="center">
-  <h2 class="brand">Welcome to StarFlip 🚀</h2>
-  <p>Your balance: <span id="user-balance" class="balance-amount">$0.00</span></p>
+  <div class="game-buttons">
+    <button class="game-btn" data-game="game1">Play Game 1 (Cost: 1 LTC)</button>
+    <button class="game-btn" data-game="game2">Play Game 2 (Cost: 2 LTC)</button>
+    <button class="game-btn" data-game="game3">Play Game 3 (Cost: 3 LTC)</button>
+  </div>
+</div>
 
-  <section class="deposit-section">
-    <h2>Deposit Crypto</h2>
-    <form id="deposit-form">
-      <label for="crypto-select">Select Crypto:</label>
-      <select id="crypto-select" required>
-        <option value="">--Choose--</option>
-        <option value="LTC">Litecoin (LTC)</option>
-        <option value="BTC">Bitcoin (BTC)</option>
-        <option value="SOL">Solana (SOL)</option>
-      </select>
+<button id="withdraw-toggle" title="Withdraw">Withdraw</button>
+<div id="withdraw-section" aria-hidden="true">
+  <h3>Withdraw Crypto</h3>
+  <label for="withdraw-crypto-select">Select Crypto</label>
+  <select id="withdraw-crypto-select">
+    <option value="LTC">Litecoin (LTC)</option>
+    <option value="BTC">Bitcoin (BTC)</option>
+    <option value="SOL">Solana (SOL)</option>
+  </select>
+  <label for="withdraw-amount">Amount</label>
+  <input type="number" id="withdraw-amount" min="0.01" step="0.01" placeholder="0.00" />
+  <button id="withdraw-btn">Withdraw</button>
+</div>
 
-      <label for="deposit-amount">Amount ($):</label>
-      <input type="number" id="deposit-amount" min="1" placeholder="Amount in USD" required />
+<script>
+  // State variables
+  let loggedIn = false;
+  let balance = 0.00;  // Start balance in LTC
+  const balanceDisplay = document.getElementById('balance');
 
-      <button type="submit" class="deposit-btn">Deposit Now</button>
-    </form>
-    <div id="deposit-message" class="deposit-message"></div>
-  </section>
+  // Login form handling
+  const loginScreen = document.getElementById('login-screen');
+  const app = document.getElementById('app');
+  const loginForm = document.getElementById('login-form');
 
-  <section class="game-buttons">
-    <a href="mines.html" id="play-mines" class="game-btn">Play Mines</a>
-    <a href="towers.html" id="play-towers" class="game-btn secondary">Play Towers</a>
-  </section>
-</main>
-
-<script type="module">
-  // Mock Firebase for demo: Replace with your firebase imports & config
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-
-  const firebaseConfig = {
-    // your config here
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-
-  let balance = 0;
-
-  const userBalanceEl = document.getElementById('user-balance');
-  const depositForm = document.getElementById('deposit-form');
-  const depositMessage = document.getElementById('deposit-message');
-  const logoutBtn = document.getElementById('logout-btn');
-  const loginBtn = document.getElementById('login-btn');
-
-  async function loadBalance(uid) {
-    const userDoc = await getDoc(doc(db, "users", uid));
-    if (userDoc.exists()) {
-      balance = userDoc.data().balance || 0;
-    } else {
-      balance = 0;
-      await setDoc(doc(db, "users", uid), { balance: 0 });
-    }
-    userBalanceEl.textContent = `$${balance.toFixed(2)}`;
-  }
-
-  depositForm.addEventListener('submit', async e => {
+  loginForm.addEventListener('submit', e => {
     e.preventDefault();
-    const crypto = document.getElementById('crypto-select').value;
-    const amount = parseFloat(document.getElementById('deposit-amount').value);
+    // For demo, just accept any username/password
+    loggedIn = true;
+    loginScreen.style.display = 'none';
+    app.style.display = 'block';
+    app.setAttribute('aria-hidden', 'false');
+    updateBalanceUI();
+  });
 
-    if (!crypto || isNaN(amount) || amount <= 0) {
-      depositMessage.textContent = 'Please select crypto and enter a valid amount.';
-      depositMessage.style.color = 'red';
+  // Deposit toggle and logic
+  const depositToggleBtn = document.getElementById('deposit-toggle');
+  const depositSection = document.getElementById('deposit-section');
+  depositToggleBtn.addEventListener('click', () => {
+    if (depositSection.style.display === 'none' || depositSection.style.display === '') {
+      depositSection.style.display = 'block';
+    } else {
+      depositSection.style.display = 'none';
+    }
+  });
+
+  const depositBtn = document.getElementById('deposit-btn');
+  depositBtn.addEventListener('click', () => {
+    const crypto = document.getElementById('crypto-select').value;
+    const amountInput = document.getElementById('deposit-amount');
+    const amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid amount to deposit.');
       return;
     }
-
-    depositMessage.textContent = `Processing your ${crypto} deposit of $${amount.toFixed(2)}... 🚀`;
-    depositMessage.style.color = '#00ffff';
-
-    // Simulate async deposit delay
-    setTimeout(async () => {
-      balance += amount;
-      await updateDoc(doc(db, "users", auth.currentUser.uid), { balance });
-      userBalanceEl.textContent = `$${balance.toFixed(2)}`;
-      depositMessage.textContent = `Deposit successful! Your new balance is $${balance.toFixed(2)}.`;
-      depositMessage.style.color = '#ff00ff';
-      depositForm.reset();
-    }, 2000);
+    // For demo: just add amount to balance regardless of crypto type
+    balance += amount;
+    alert(`Deposited ${amount.toFixed(4)} ${crypto}!`);
+    amountInput.value = '';
+    depositSection.style.display = 'none';
+    updateBalanceUI();
   });
 
-  onAuthStateChanged(auth, async user => {
-    if (user) {
-      logoutBtn.style.display = 'inline-block';
-      loginBtn.style.display = 'none';
-      await loadBalance(user.uid);
-      sessionStorage.setItem('userBalance', balance.toFixed(2));
-      sessionStorage.setItem('userID', user.uid);
-    } else {
-      logoutBtn.style.display = 'none';
-      loginBtn.style.display = 'inline-block';
-      userBalanceEl.textContent = '$0.00';
-      sessionStorage.clear();
+  // Withdraw toggle and logic
+  const withdrawToggleBtn = document.getElementById('withdraw-toggle');
+  const withdrawSection = document.getElementById('withdraw-section');
+  withdrawToggleBtn.addEventListener('click', () => {
+    withdrawSection.classList.toggle('open');
+  });
+
+  const withdrawBtn = document.getElementById('withdraw-btn');
+  withdrawBtn.addEventListener('click', () => {
+    const crypto = document.getElementById('withdraw-crypto-select').value;
+    const amountInput = document.getElementById('withdraw-amount');
+    const amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid amount to withdraw.');
+      return;
     }
+    if (amount > balance) {
+      alert('Insufficient balance to withdraw.');
+      return;
+    }
+    balance -= amount;
+    alert(`Withdrew ${amount.toFixed(4)} ${crypto}!`);
+    amountInput.value = '';
+    withdrawSection.classList.remove('open');
+    updateBalanceUI();
   });
 
-  logoutBtn.onclick = () => signOut(auth);
-  loginBtn.onclick = () => signInAnonymously(auth);
-
-  // Pass balance & userID to other games using sessionStorage
-  document.querySelectorAll('.game-btn').forEach(btn => {
+  // Game buttons logic (deduct balance)
+  const gameButtons = document.querySelectorAll('.game-btn');
+  gameButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      sessionStorage.setItem('userBalance', balance.toFixed(2));
-      sessionStorage.setItem('userID', auth.currentUser ? auth.currentUser.uid : '');
+      const costMap = {
+        'game1': 1,
+        'game2': 2,
+        'game3': 3,
+      };
+      const game = btn.getAttribute('data-game');
+      const cost = costMap[game] || 1;
+      if (balance < cost) {
+        alert('Insufficient balance to play this game.');
+        return;
+      }
+      balance -= cost;
+      updateBalanceUI();
+      alert(`You played ${game}! ${cost} LTC deducted.`);
+      // Here you can add your actual game launching logic
     });
   });
+
+  function updateBalanceUI() {
+    balanceDisplay.textContent = `Balance: ${balance.toFixed(4)} LTC`;
+  }
 </script>
 </body>
 </html>
