@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Mines - PulseFlip</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <style>
+      body {
+        background: #000f2f;
+        color: white;
+        font-family: 'Segoe UI', sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 1em;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        margin-bottom: 1em;
+      }
+      .back {
+        color: #00ffff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      h1 {
+        flex-grow: 1;
+        margin: 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 60px);
+        grid-template-rows: repeat(5, 60px);
+        gap: 10px;
+        justify-content: center;
+        margin: 1em 0;
+      }
+      .cell {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        font-size: 30px;
+        line-height: 60px;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.3s;
+      }
+      .cell.safe {
+        background: #006600;
+        cursor: default;
+      }
+      .cell.bomb {
+        background: #660000;
+        color: #ff4444;
+        cursor: default;
+      }
+      .controls {
+        margin-top: 1em;
+      }
+      input[type=range] {
+        width: 250px;
+      }
+      button {
+        background: #00ffff;
+        border: none;
+        padding: 10px 20px;
+        margin-left: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: black;
+        box-shadow: 0 0 10px #00ffffaa;
+        transition: background 0.3s;
+      }
+      button:hover:not(:disabled) {
+        background: #00cccc;
+      }
+      button:disabled {
+        background: #555;
+        cursor: not-allowed;
+        box-shadow: none;
+        color: #ccc;
+      }
+      .info {
+        margin-top: 1em;
+        font-size: 1.2em;
+      }
+      label {
+        font-weight: bold;
+      }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="back">&larr; Home</a>
+        <h1>Mines</h1>
+    </header>
+    <main>
+        <div class="info">
+          <div>Balance: $<span id="balance">100.00</span></div>
+          <div>
+            <label for="betRange">Bet Amount: $<span id="betDisplay">1.00</span></label><br/>
+            <input type="range" id="betRange" min="1" max="100" step="1" value="1" />
+          </div>
+          <div style="margin-top: 10px;">
+            <label for="bombRange">Number of Bombs: <span id="bombDisplay">3</span></label><br/>
+            <input type="range" id="bombRange" min="1" max="24" step="1" value="3" />
+          </div>
+          <div style="margin-top: 15px;">
+            <button id="startBtn">Start Game</button>
+            <button id="withdrawBtn" disabled>Withdraw Profit</button>
+          </div>
+          <div style="margin-top: 10px;">
+            Profit: $<span id="profit">0.00</span>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+    </main>
+
+    <audio id="bombSound" src="https://actions.google.com/sounds/v1/explosions/explosion.ogg"></audio>
+
+    <script>
+      const grid = document.getElementById('grid');
+      const balanceDisplay = document.getElementById('balance');
+      const betRange = document.getElementById('betRange');
+      const betDisplay = document.getElementById('betDisplay');
+      const bombRange = document.getElementById('bombRange');
+      const bombDisplay = document.getElementById('bombDisplay');
+      const startBtn = document.getElementById('startBtn');
+      const withdrawBtn = document.getElementById('withdrawBtn');
+      const profitDisplay = document.getElementById('profit');
+      const bombSound = document.getElementById('bombSound');
+
+      // Load balance from localStorage or default 100
+      let balance = Number(localStorage.getItem('userBalance')) || 100.00;
+      let bet = Number(betRange.value);
+      let bombCount = Number(bombRange.value);
+      let gameOver = true;
+      let profit = 0;
+      let bombPositions = new Set();
+      let revealedCells = new Set();
+
+      function updateBalanceDisplay() {
+        balanceDisplay.textContent = balance.toFixed(2);
+        localStorage.setItem('userBalance', balance.toFixed(2));
+        // Also update max bet range dynamically:
+        betRange.max = Math.min(100, Math.floor(balance));
+        if (bet > betRange.max) {
+          bet = betRange.max;
+          betRange.value = bet;
+          betDisplay.textContent = bet.toFixed(2);
+        }
+      }
+
+      function updateBet() {
+        bet = Number(betRange.value);
+        if (bet > balance) {
+          bet = balance;
+          betRange.value = bet;
+        }
+        betDisplay.textContent = bet.toFixed(2);
+      }
+
+      function updateBombCount() {
+        bombCount = Number(bombRange.value);
+        bombDisplay.textContent = bombCount;
+      }
+
+      function createGrid() {
+        grid.innerHTML = '';
+        for (let i = 0; i < 25; i++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.dataset.index = i;
+          cell.addEventListener('click', onCellClick);
+          grid.appendChild(cell);
+        }
+      }
+
+      function startGame() {
+        if (bet > balance) {
+          alert('Bet cannot exceed your balance!');
+          return;
+        }
+        if (bombCount >= 25) {
+          alert('Bombs cannot be equal or more than total cells!');
+          return;
+        }
+        gameOver = false;
+        profit = 0;
+        profitDisplay.textContent = profit.toFixed(2);
+        withdrawBtn.disabled = true;
+        revealedCells.clear();
+        bombPositions.clear();
+        createGrid();
+
+        // Place bombs randomly
+        while (bombPositions.size < bombCount) {
+          bombPositions.add(Math.floor(Math.random() * 25));
+        }
+      }
+
+      // Profit multiplier based on safe clicks and bomb count, you can tweak this
+      function calculateProfit(safeClicks) {
+        // Base multiplier depends on how many bombs (the fewer bombs, the higher chance)
+        // Let's make it roughly:
+        // multiplier = (totalCells / (totalCells - bombs)) ^ safeClicks
+        let base = 25 / (25 - bombCount);
+        return bet * (Math.pow(base, safeClicks));
+      }
+
+      function loseBet() {
+        balance -= bet;
+        if (balance < 1) {
+          alert('You have no more balance left! Resetting balance to $100.');
+          balance = 100;
+        }
+        updateBalanceDisplay();
+      }
+
+      function onCellClick(e) {
+        if (gameOver) return;
+        const cell = e.currentTarget;
+        const idx = Number(cell.dataset.index);
+        if (revealedCells.has(idx)) return;
+
+        if (bombPositions.has(idx)) {
+          // Bomb exploded
+          cell.classList.add('bomb');
+          cell.textContent = '💣';
+          bombSound.play();
+          loseBet();
+          alert('💥 Boom! You hit a bomb and lost your bet!');
+          gameOver = true;
+          withdrawBtn.disabled = true;
+          revealAllBombs();
+          return;
+        }
+
+        // Safe click
+        cell.classList.add('safe');
+        cell.textContent = '✔️';
+        revealedCells.add(idx);
+
+        profit = calculateProfit(revealedCells.size) - bet;
+        profitDisplay.textContent = profit.toFixed(2);
+        if (profit > 0) withdrawBtn.disabled = false;
+      }
+
+      function revealAllBombs() {
+        const cells = grid.querySelectorAll('.cell');
+        bombPositions.forEach(pos => {
+          const cell = cells[pos];
+          if (!revealedCells.has(pos)) {
+            cell.classList.add('bomb');
+            cell.textContent = '💣';
+          }
+        });
+      }
+
+      function withdraw() {
+        if (gameOver) return;
+        if (profit <= 0) return;
+        balance += profit;
+        alert(`You withdrew $${profit.toFixed(2)}. Your new balance is $${balance.toFixed(2)}.`);
+        profit = 0;
+        profitDisplay.textContent = profit.toFixed(2);
+        updateBalanceDisplay();
+        withdrawBtn.disabled = true;
+        gameOver = true;
+        revealAllBombs();
+      }
+
+      // Event Listeners
+      betRange.addEventListener('input', () => {
+        updateBet();
+      });
+
+      bombRange.addEventListener('input', () => {
+        updateBombCount();
+      });
+
+      startBtn.addEventListener('click', () => {
+        updateBet();
+        updateBombCount();
+        startGame();
+      });
+
+      withdrawBtn.addEventListener('click', () => {
+        withdraw();
+      });
+
+      // Init
+      updateBalanceDisplay();
+      updateBet();
+      updateBombCount();
+      createGrid();
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>PulseFlip Casino</title>
+    <link rel="stylesheet" href="styles/main.css" />
+    <style>
+        /* Add/override styles for auth and wallet */
+        .auth-buttons, .wallet {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1em;
+        }
+        .auth-buttons input, .wallet input {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            width: 140px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .auth-buttons input:focus, .wallet input:focus {
+            border: 2px solid #00ffff;
+            background: rgba(255,255,255,0.15);
+        }
+        .action-btn, .wallet button {
+            background: #00ffff;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: black;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,255,255,0.6);
+            transition: background 0.3s ease;
+        }
+        .action-btn:hover, .wallet button:hover {
+            background: #00cccc;
+        }
+        .wallet {
+            flex-direction: column;
+            align-items: center;
+        }
+        .wallet-balance {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 1em;
+            color: #00ffff;
+            cursor: pointer;
+            user-select: none;
+        }
+        .wallet-actions {
+            display: flex;
+            gap: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="assets/logo.png" alt="PulseFlip Logo" class="logo" />
+        <nav>
+            <a href="mines.html">Mines</a>
+            <a href="towers.html">Towers</a>
+            <div id="auth-container" class="auth-buttons">
+                <input type="text" id="username" placeholder="Username" />
+                <input type="password" id="password" placeholder="Password" />
+                <button onclick="signup()" class="action-btn">Sign Up</button>
+                <button onclick="login()" class="action-btn">Log In</button>
+            </div>
+            <div id="wallet-container" class="wallet" style="display:none;">
+                <div id="wallet-balance" class="wallet-balance" title="Click to refresh balance">$0.00</div>
+                <div class="wallet-actions">
+                    <button onclick="deposit()">Deposit</button>
+                    <button onclick="withdraw()">Withdraw</button>
+                    <button onclick="logout()">Log Out</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="center">
+        <h1>Welcome to StarFlip</h1>
+        <p>Choose a game to start playing:</p>
+        <div class="game-buttons">
+            <a href="mines.html" class="game-btn">Play Mines</a>
+            <a href="towers.html" class="game-btn">Play Towers</a>
+        </div>
+    </main>
+
+<script>
+    // Mock database for demo only
+    const usersDB = {};
+
+    // Track logged-in user and balance in memory
+    let currentUser = null;
+    let balance = 0;
+
+    function signup() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        if (!username || !password) {
+            alert("Please enter both username and password.");
+            return;
+        }
+        if (usersDB[username]) {
+            alert("Username already taken.");
+            return;
+        }
+        usersDB[username] = { password, balance: 0 };
+        alert("Signup successful! Please log in.");
+        clearInputs();
+    }
+
+    function login() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        if (!username || !password) {
+            alert("Please enter both username and password.");
+            return;
+        }
+        if (!usersDB[username] || usersDB[username].password !== password) {
+            alert("Invalid username or password.");
+            return;
+        }
+        currentUser = username;
+        balance = usersDB[username].balance;
+        showWallet();
+        clearInputs();
+    }
+
+    function logout() {
+        currentUser = null;
+        balance = 0;
+        showAuth();
+    }
+
+    function showWallet() {
+        document.getElementById("auth-container").style.display = "none";
+        document.getElementById("wallet-container").style.display = "flex";
+        updateBalanceDisplay();
+    }
+
+    function showAuth() {
+        document.getElementById("wallet-container").style.display = "none";
+        document.getElementById("auth-container").style.display = "flex";
+        updateBalanceDisplay();
+    }
+
+    function updateBalanceDisplay() {
+        const balanceEl = document.getElementById("wallet-balance");
+        balanceEl.textContent = `$${balance.toFixed(2)}`;
+    }
+
+    function deposit() {
+        if (!currentUser) return;
+        const amountStr = prompt("Enter amount to deposit:", "10");
+        const amount = parseFloat(amountStr);
+        if (isNaN(amount) || amount <= 0) {
+            alert("Invalid deposit amount.");
+            return;
+        }
+        balance += amount;
+        usersDB[currentUser].balance = balance;
+        updateBalanceDisplay();
+        alert(`Deposited $${amount.toFixed(2)} successfully.`);
+    }
+
+    function withdraw() {
+        if (!currentUser) return;
+        const amountStr = prompt("Enter amount to withdraw:", "10");
+        const amount = parseFloat(amountStr);
+        if (isNaN(amount) || amount <= 0) {
+            alert("Invalid withdrawal amount.");
+            return;
+        }
+        if (amount > balance) {
+            alert("Insufficient balance.");
+            return;
+        }
+        balance -= amount;
+        usersDB[currentUser].balance = balance;
+        updateBalanceDisplay();
+        alert(`Withdrew $${amount.toFixed(2)} successfully.`);
+    }
+
+    function clearInputs() {
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+    }
+</script>
+</body>
+</html>

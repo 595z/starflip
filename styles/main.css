@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(-45deg, #0f0f0f, #120043, #320054, #000f2f);
+    background-size: 400% 400%;
+    animation: animateBackground 20s ease infinite;
+    color: white;
+    text-align: center;
+}
+
+/* Background animation keyframes */
+@keyframes animateBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(20, 20, 30, 0.7);
+    padding: 1em 2em;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+}
+
+nav a, .connect-wallet {
+    margin: 0 10px;
+    color: #00ffff;
+    text-decoration: none;
+    font-weight: bold;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #00ffff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,255,255,0.3);
+}
+
+nav a:hover, .connect-wallet:hover {
+    background: #00ffff;
+    color: #000;
+    transform: scale(1.05);
+}
+
+.center {
+    margin-top: 4em;
+}
+
+.brand {
+    background: linear-gradient(90deg, #00ffff, #ff00ff);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+
+.game-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5em;
+    margin-top: 2em;
+}
+
+.game-btn {
+    padding: 1em 2em;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid #00ffff;
+    border-radius: 12px;
+    color: #00ffff;
+    font-size: 1.2em;
+    text-decoration: none;
+    font-weight: bold;
+    backdrop-filter: blur(6px);
+    transition: all 0.4s ease;
+    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+}
+
+.game-btn.secondary {
+    border-color: #ff00ff;
+    color: #ff00ff;
+    box-shadow: 0 0 15px rgba(255,0,255,0.3);
+}
+
+.game-btn:hover {
+    background: #00ffff;
+    color: black;
+    transform: scale(1.08);
+}
+
+.game-btn.secondary:hover {
+    background: #ff00ff;
+    color: black;
+}
+
+@media (max-width: 600px) {
+    .game-buttons {
+        flex-direction: column;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5em;
+    }
+
+    .logo {
+        height: 40px;
+    }
+}
