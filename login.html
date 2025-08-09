@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Starflip Login</title>
+</head>
+<body>
+  <h1>Starflip Login</h1>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button id="signup">Sign Up</button>
+  <button id="login">Log In</button>
+  <button id="logout">Log Out</button>
+
+  <script type="module">
+    // Import from Firebase CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut }
+      from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+    // Your config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDUknxxv0drQKnsrfFa5bmmUCLynh17Z0A",
+      authDomain: "starflip-24c3c.firebaseapp.com",
+      projectId: "starflip-24c3c",
+      storageBucket: "starflip-24c3c.firebasestorage.app",
+      messagingSenderId: "434220085337",
+      appId: "1:434220085337:web:4558bb9a1241bd19940148",
+      measurementId: "G-9PF8N00DQD"
+    };
+
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    // Sign up
+    document.getElementById("signup").addEventListener("click", () => {
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          alert("Account created: " + userCredential.user.email);
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
+
+    // Log in
+    document.getElementById("login").addEventListener("click", () => {
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          alert("Welcome back: " + userCredential.user.email);
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    });
+
+    // Log out
+    document.getElementById("logout").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        alert("Logged out");
+      });
+    });
+  </script>
+</body>
+</html>
