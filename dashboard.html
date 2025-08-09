@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PulseFlip - Dashboard</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-blur"></div>
+  <header>
+    <h1>PulseFlip Dashboard</h1>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </header>
+  <main class="dashboard-container">
+    <section class="balance-section">
+      <h2>Balance</h2>
+      <div class="balance-amount">$<span id="balanceDisplay">0.00</span></div>
+
+      <div class="deposit-withdraw">
+        <button id="depositBtn">Deposit $100</button>
+        <button id="withdrawBtn">Withdraw All</button>
+      </div>
+    </section>
+
+    <section class="game-selection">
+      <h2>Choose a Game</h2>
+      <div class="game-cards">
+        <button class="game-card" data-game="mines">Minesweeper</button>
+        <button class="game-card" data-game="towers">Towers</button>
+        <button class="game-card" data-game="dice">Dice Roll</button>
+        <button class="game-card" data-game="coinflip">Coin Flip</button>
+      </div>
+    </section>
+  </main>
+
+<script src="main.js"></script>
+</body>
+</html>
 
