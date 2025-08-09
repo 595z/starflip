@@ -2,420 +2,555 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Crypto Gambling - Login & Dashboard</title>
+<title>Login & Towers and Mines - PulseFlip</title>
 <style>
-  /* Dark red and black theme */
+  /* General styles */
   body {
-    margin: 0;
+    background: #000f2f;
+    color: white;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(-45deg, #1a0000, #330000, #660000, #110000);
-    background-size: 400% 400%;
-    animation: animateBackground 25s ease infinite;
-    color: #f5f5f5;
     text-align: center;
-    overflow-x: hidden;
+    margin: 0; padding: 1em;
   }
-  @keyframes animateBackground {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
+  h1 {
+    margin: 0 0 20px 0;
   }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(30, 0, 0, 0.8);
-    padding: 1em 2em;
-    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.7);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .logo-container {
-    display: flex;
-    align-items: center;
-  }
-  .logo {
-    height: 50px;
-  }
-
-  nav a, .btn {
-    margin: 0 10px;
-    color: #ff4444;
+  a.back {
+    color: #00ffff;
+    font-weight: bold;
     text-decoration: none;
-    font-weight: bold;
-    background: rgba(255, 68, 68, 0.1);
-    border: 1.5px solid #ff4444;
-    padding: 8px 18px;
-    border-radius: 10px;
-    backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
-    cursor: pointer;
   }
-  nav a:hover, .btn:hover {
-    background: #ff4444;
-    color: black;
-    transform: scale(1.07);
-  }
-
-  /* Login Screen */
-  #login-screen {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(25,0,0,0.9);
-    padding: 1em;
-  }
-
-  #login-screen h1 {
-    font-size: 3em;
-    margin-bottom: 0.5em;
-    color: #ff5555;
-    text-shadow: 0 0 10px #ff2222;
-  }
-
-  #login-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-  }
-
-  #login-form input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid #ff4444;
-    color: #fff;
-    font-size: 1.1em;
-    padding: 10px;
-    margin-bottom: 1em;
-    border-radius: 10px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  #login-form input:focus {
-    border-color: #ff8888;
-  }
-
-  #login-form button {
-    background: #ff4444;
-    border: none;
-    padding: 12px;
-    color: black;
-    font-weight: bold;
-    font-size: 1.2em;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 0 15px #ff4444;
-    transition: background 0.3s ease;
-  }
-  #login-form button:hover {
-    background: #ff2222;
-  }
-
-  /* Main App UI */
-  #app {
-    display: none;
-    padding: 2em 1em 5em;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  #balance {
-    font-size: 1.5em;
-    margin-bottom: 1em;
-    color: #ff6666;
-    text-shadow: 0 0 7px #ff4444;
-  }
-
-  .game-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5em;
-    margin-top: 1.5em;
-  }
-  .game-btn {
-    padding: 1em 2em;
-    background: rgba(255, 68, 68, 0.1);
-    border: 2px solid #ff4444;
-    border-radius: 15px;
-    color: #ff6666;
-    font-size: 1.3em;
-    font-weight: bold;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(255, 68, 68, 0.7);
-    cursor: pointer;
-  }
-  .game-btn:hover {
-    background: #ff4444;
-    color: black;
-    transform: scale(1.1);
-  }
-
-  /* Deposit and Withdraw */
-  #deposit-section, #withdraw-section {
-    margin-top: 2em;
-    padding: 1.5em;
-    background: rgba(255, 68, 68, 0.15);
-    border-radius: 15px;
+  /* Container */
+  .container {
     max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  label, select, input[type=number] {
-    font-size: 1.1em;
-    margin-bottom: 0.7em;
-    color: #ff9999;
-    display: block;
-    width: 100%;
-  }
-  select, input[type=number] {
-    padding: 0.7em;
-    border-radius: 10px;
-    border: 2px solid #ff4444;
-    background: rgba(255, 68, 68, 0.1);
-    color: #fff;
-    outline: none;
-  }
-  select:focus, input[type=number]:focus {
-    border-color: #ff8888;
-  }
-  #deposit-btn, #withdraw-btn {
-    margin-top: 1em;
-    padding: 0.8em 1.5em;
-    background: #ff4444;
-    border: none;
-    color: black;
-    font-weight: bold;
-    font-size: 1.1em;
+    margin: 0 auto;
+    background: #111a44;
+    padding: 20px;
     border-radius: 12px;
+    box-shadow: 0 0 15px #00ffffaa;
+  }
+  /* Login Form */
+  input[type=text], input[type=password] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+  }
+  button {
+    background: #00ffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 0 15px #ff4444;
-    transition: background 0.3s ease;
-  }
-  #deposit-btn:hover, #withdraw-btn:hover {
-    background: #ff2222;
-  }
-
-  /* Withdraw side button */
-  #withdraw-toggle {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    background: #ff4444;
-    color: black;
-    padding: 15px 12px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
     font-weight: bold;
+    color: black;
+    box-shadow: 0 0 10px #00ffffaa;
+    transition: background 0.3s;
+    margin-top: 10px;
+  }
+  button:hover:not(:disabled) {
+    background: #00cccc;
+  }
+  button:disabled {
+    background: #555;
+    cursor: not-allowed;
+    box-shadow: none;
+    color: #ccc;
+  }
+  .toggle-link {
+    margin-top: 15px;
+    color: #00ffff;
     cursor: pointer;
-    box-shadow: 0 0 15px #ff4444;
+    text-decoration: underline;
+  }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 20px;
+  }
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #002040;
+    border-radius: 8px;
+    font-weight: bold;
     user-select: none;
-    transform: translateY(-50%);
-    z-index: 110;
+    box-shadow: 0 0 5px #00ffff55;
+    transition: background 0.3s;
   }
-
-  #withdraw-section {
-    position: fixed;
-    top: 50%;
-    right: -420px; /* hidden by default */
-    width: 400px;
-    background: rgba(255, 68, 68, 0.25);
-    box-shadow: 0 0 30px #ff4444;
-    transform: translateY(-50%);
-    transition: right 0.5s ease;
-    z-index: 109;
+  .tab.active {
+    background: #00ffff;
+    color: black;
+    box-shadow: 0 0 15px #00ffffaa;
   }
-  #withdraw-section.open {
-    right: 0;
+  /* Hide sections */
+  .section {
+    display: none;
   }
-
-  /* Responsive */
-  @media (max-width: 600px) {
-    #app {
-      padding: 1em 0.5em 4em;
-    }
-    .game-buttons {
-      flex-direction: column;
-    }
-    #withdraw-section {
-      width: 100vw;
-      right: -100vw;
-    }
-    #withdraw-section.open {
-      right: 0;
-    }
+  .section.active {
+    display: block;
   }
-
+  /* Mines game styles (your code) */
+  #minesGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    grid-template-rows: repeat(5, 60px);
+    gap: 10px;
+    justify-content: center;
+    margin: 1em 0;
+  }
+  .cell {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    font-size: 30px;
+    line-height: 60px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s;
+  }
+  .cell.safe {
+    background: #006600;
+    cursor: default;
+  }
+  .cell.bomb {
+    background: #660000;
+    color: #ff4444;
+    cursor: default;
+  }
+  /* Towers game simple styles */
+  #towers {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .tower {
+    width: 80px;
+    height: 180px;
+    background: linear-gradient(to top, #004400, #00cc00);
+    border-radius: 12px;
+    box-shadow: 0 0 10px #00ff00aa inset;
+    position: relative;
+    cursor: pointer;
+  }
+  .tower:hover {
+    box-shadow: 0 0 20px #00ffffaa inset;
+  }
+  .tower-level {
+    width: 100%;
+    height: 30px;
+    border-bottom: 2px solid #003300;
+    background-color: #007700;
+  }
+  #towerStatus {
+    margin-top: 10px;
+    font-size: 1.1em;
+  }
 </style>
 </head>
 <body>
 
-<!-- Login Screen -->
-<div id="login-screen">
-  <h1>Welcome Back</h1>
-  <form id="login-form">
-    <input type="text" id="username" placeholder="Username" required autocomplete="off" />
-    <input type="password" id="password" placeholder="Password" required autocomplete="off" />
-    <button type="submit">Log In</button>
-  </form>
+<!-- Login container -->
+<div class="container" id="loginContainer">
+  <h1 id="formTitle">Login</h1>
+  <input type="text" id="username" placeholder="Username" autocomplete="off" />
+  <input type="password" id="password" placeholder="Password" autocomplete="off" />
+  <button id="loginBtn">Login</button>
+  <div class="toggle-link" id="toggleForm">Don't have an account? Sign up</div>
+  <div id="loginMessage" style="margin-top: 10px; color: #ff6666;"></div>
 </div>
 
-<!-- Main App -->
-<div id="app" aria-hidden="true">
-  <header>
-    <div class="logo-container">
-      <img src="https://i.imgur.com/IQzR1gP.png" alt="Crypto Logo" class="logo" />
-      <h2 style="color:#ff4444; margin-left:10px;">CryptoGamble</h2>
+<!-- Game container (hidden by default) -->
+<div class="container" id="gameContainer" style="display:none;">
+  <a href="#" class="back" id="logoutBtn">&larr; Logout</a>
+  <h1>Towers & Mines</h1>
+  <div class="info" style="margin-bottom: 10px;">
+    Balance: $<span id="balance">100.00</span>
+  </div>
+  
+  <!-- Tabs for Towers and Mines -->
+  <div class="tabs">
+    <div class="tab active" data-target="towersSection">Towers</div>
+    <div class="tab" data-target="minesSection">Mines</div>
+  </div>
+  
+  <!-- Towers Section -->
+  <section id="towersSection" class="section active">
+    <div id="towers">
+      <!-- 3 Towers, each with 6 levels -->
+      <div class="tower" data-index="0" title="Click to upgrade tower 1">
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+      </div>
+      <div class="tower" data-index="1" title="Click to upgrade tower 2">
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+      </div>
+      <div class="tower" data-index="2" title="Click to upgrade tower 3">
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+        <div class="tower-level"></div>
+      </div>
     </div>
-    <nav>
-      <span id="balance">Balance: 0.00 LTC</span>
-      <button class="btn" id="deposit-toggle">Deposit</button>
-    </nav>
-  </header>
-
-  <div id="deposit-section" style="display:none;">
-    <h3>Deposit Crypto</h3>
-    <label for="crypto-select">Select Crypto</label>
-    <select id="crypto-select">
-      <option value="LTC">Litecoin (LTC)</option>
-      <option value="BTC">Bitcoin (BTC)</option>
-      <option value="SOL">Solana (SOL)</option>
-    </select>
-    <label for="deposit-amount">Amount</label>
-    <input type="number" id="deposit-amount" min="0.01" step="0.01" placeholder="0.00" />
-    <button id="deposit-btn">Deposit</button>
-  </div>
-
-  <div class="game-buttons">
-    <button class="game-btn" data-game="game1">Play Game 1 (Cost: 1 LTC)</button>
-    <button class="game-btn" data-game="game2">Play Game 2 (Cost: 2 LTC)</button>
-    <button class="game-btn" data-game="game3">Play Game 3 (Cost: 3 LTC)</button>
-  </div>
+    <div id="towerStatus">Click on a tower to upgrade for $10. Each level increases income by $5.</div>
+    <button id="collectIncomeBtn" style="margin-top:15px;">Collect Income</button>
+  </section>
+  
+  <!-- Mines Section -->
+  <section id="minesSection" class="section">
+    <div>
+      <label>Bet Amount: $<span id="betDisplay">1.00</span></label><br/>
+      <input type="range" id="betRange" min="1" max="100" step="1" value="1" />
+    </div>
+    <div style="margin-top: 10px;">
+      <label>Number of Bombs: <span id="bombDisplay">3</span></label><br/>
+      <input type="range" id="bombRange" min="1" max="24" step="1" value="3" />
+    </div>
+    <div style="margin-top: 15px;">
+      <button id="startBtn">Start Game</button>
+      <button id="withdrawBtn" disabled>Withdraw Profit</button>
+    </div>
+    <div style="margin-top: 10px;">
+      Profit: $<span id="profit">0.00</span>
+    </div>
+    <div id="minesGrid"></div>
+  </section>
 </div>
 
-<button id="withdraw-toggle" title="Withdraw">Withdraw</button>
-<div id="withdraw-section" aria-hidden="true">
-  <h3>Withdraw Crypto</h3>
-  <label for="withdraw-crypto-select">Select Crypto</label>
-  <select id="withdraw-crypto-select">
-    <option value="LTC">Litecoin (LTC)</option>
-    <option value="BTC">Bitcoin (BTC)</option>
-    <option value="SOL">Solana (SOL)</option>
-  </select>
-  <label for="withdraw-amount">Amount</label>
-  <input type="number" id="withdraw-amount" min="0.01" step="0.01" placeholder="0.00" />
-  <button id="withdraw-btn">Withdraw</button>
-</div>
+<!-- Audio -->
+<audio id="bombSound" src="https://actions.google.com/sounds/v1/explosions/explosion.ogg"></audio>
 
 <script>
-  // State variables
-  let loggedIn = false;
-  let balance = 0.00;  // Start balance in LTC
-  const balanceDisplay = document.getElementById('balance');
+  // --- LOGIN & SIGNUP LOGIC ---
+  const loginContainer = document.getElementById('loginContainer');
+  const gameContainer = document.getElementById('gameContainer');
+  const formTitle = document.getElementById('formTitle');
+  const toggleForm = document.getElementById('toggleForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginMessage = document.getElementById('loginMessage');
+  const logoutBtn = document.getElementById('logoutBtn');
+  
+  let isLoginMode = true; // true = login, false = signup
 
-  // Login form handling
-  const loginScreen = document.getElementById('login-screen');
-  const app = document.getElementById('app');
-  const loginForm = document.getElementById('login-form');
-
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    // For demo, just accept any username/password
-    loggedIn = true;
-    loginScreen.style.display = 'none';
-    app.style.display = 'block';
-    app.setAttribute('aria-hidden', 'false');
-    updateBalanceUI();
-  });
-
-  // Deposit toggle and logic
-  const depositToggleBtn = document.getElementById('deposit-toggle');
-  const depositSection = document.getElementById('deposit-section');
-  depositToggleBtn.addEventListener('click', () => {
-    if (depositSection.style.display === 'none' || depositSection.style.display === '') {
-      depositSection.style.display = 'block';
+  // Simple user DB in localStorage key: "users" as JSON object { username: password }
+  function getUsers() {
+    return JSON.parse(localStorage.getItem('users') || '{}');
+  }
+  function saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+  }
+  
+  function clearLoginForm() {
+    usernameInput.value = '';
+    passwordInput.value = '';
+    loginMessage.textContent = '';
+  }
+  
+  toggleForm.addEventListener('click', () => {
+    isLoginMode = !isLoginMode;
+    if (isLoginMode) {
+      formTitle.textContent = 'Login';
+      loginBtn.textContent = 'Login';
+      toggleForm.textContent = "Don't have an account? Sign up";
     } else {
-      depositSection.style.display = 'none';
+      formTitle.textContent = 'Sign Up';
+      loginBtn.textContent = 'Sign Up';
+      toggleForm.textContent = 'Already have an account? Login';
     }
+    clearLoginForm();
   });
-
-  const depositBtn = document.getElementById('deposit-btn');
-  depositBtn.addEventListener('click', () => {
-    const crypto = document.getElementById('crypto-select').value;
-    const amountInput = document.getElementById('deposit-amount');
-    const amount = parseFloat(amountInput.value);
-    if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid amount to deposit.');
+  
+  loginBtn.addEventListener('click', () => {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    if (!username || !password) {
+      loginMessage.textContent = 'Please enter username and password.';
       return;
     }
-    // For demo: just add amount to balance regardless of crypto type
-    balance += amount;
-    alert(`Deposited ${amount.toFixed(4)} ${crypto}!`);
-    amountInput.value = '';
-    depositSection.style.display = 'none';
-    updateBalanceUI();
-  });
-
-  // Withdraw toggle and logic
-  const withdrawToggleBtn = document.getElementById('withdraw-toggle');
-  const withdrawSection = document.getElementById('withdraw-section');
-  withdrawToggleBtn.addEventListener('click', () => {
-    withdrawSection.classList.toggle('open');
-  });
-
-  const withdrawBtn = document.getElementById('withdraw-btn');
-  withdrawBtn.addEventListener('click', () => {
-    const crypto = document.getElementById('withdraw-crypto-select').value;
-    const amountInput = document.getElementById('withdraw-amount');
-    const amount = parseFloat(amountInput.value);
-    if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid amount to withdraw.');
-      return;
-    }
-    if (amount > balance) {
-      alert('Insufficient balance to withdraw.');
-      return;
-    }
-    balance -= amount;
-    alert(`Withdrew ${amount.toFixed(4)} ${crypto}!`);
-    amountInput.value = '';
-    withdrawSection.classList.remove('open');
-    updateBalanceUI();
-  });
-
-  // Game buttons logic (deduct balance)
-  const gameButtons = document.querySelectorAll('.game-btn');
-  gameButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const costMap = {
-        'game1': 1,
-        'game2': 2,
-        'game3': 3,
-      };
-      const game = btn.getAttribute('data-game');
-      const cost = costMap[game] || 1;
-      if (balance < cost) {
-        alert('Insufficient balance to play this game.');
-        return;
+    const users = getUsers();
+    if (isLoginMode) {
+      // Login
+      if (users[username] && users[username] === password) {
+        loginMessage.style.color = '#00ff00';
+        loginMessage.textContent = 'Login successful! Redirecting...';
+        // Save logged in user
+        localStorage.setItem('loggedInUser', username);
+        setTimeout(() => {
+          loginContainer.style.display = 'none';
+          gameContainer.style.display = 'block';
+          loginMessage.style.color = '#ff6666';
+          initializeGame();
+        }, 800);
+      } else {
+        loginMessage.style.color = '#ff6666';
+        loginMessage.textContent = 'Invalid username or password.';
       }
-      balance -= cost;
-      updateBalanceUI();
-      alert(`You played ${game}! ${cost} LTC deducted.`);
-      // Here you can add your actual game launching logic
+    } else {
+      // Sign Up
+      if (users[username]) {
+        loginMessage.style.color = '#ff6666';
+        loginMessage.textContent = 'Username already exists.';
+      } else {
+        users[username] = password;
+        saveUsers(users);
+        loginMessage.style.color = '#00ff00';
+        loginMessage.textContent = 'Sign up successful! You can now login.';
+        setTimeout(() => {
+          isLoginMode = true;
+          formTitle.textContent = 'Login';
+          loginBtn.textContent = 'Login';
+          toggleForm.textContent = "Don't have an account? Sign up";
+          clearLoginForm();
+        }, 1500);
+      }
+    }
+  });
+  
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('loggedInUser');
+    gameContainer.style.display = 'none';
+    loginContainer.style.display = 'block';
+    clearLoginForm();
+    balance = 100; // reset balance on logout
+  });
+  
+  // Auto-login if user saved
+  if(localStorage.getItem('loggedInUser')) {
+    loginContainer.style.display = 'none';
+    gameContainer.style.display = 'block';
+    initializeGame();
+  }
+
+  // --- TABS LOGIC ---
+  const tabs = document.querySelectorAll('.tab');
+  const sections = document.querySelectorAll('.section');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      sections.forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.getAttribute('data-target');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+  
+  // --- GAME VARIABLES ---
+  let balance = 100;
+  const balanceEl = document.getElementById('balance');
+
+  // Update balance UI
+  function updateBalance() {
+    balanceEl.textContent = balance.toFixed(2);
+  }
+  updateBalance();
+
+  // --- TOWERS GAME ---
+  const towers = document.querySelectorAll('.tower');
+  const towerStatus = document.getElementById('towerStatus');
+  const collectIncomeBtn = document.getElementById('collectIncomeBtn');
+
+  // Store towers levels (0-6)
+  let towerLevels = [0, 0, 0];
+  // Each level costs $10 and adds $5 income per level per tower on collect
+
+  towers.forEach(tower => {
+    tower.addEventListener('click', () => {
+      let idx = parseInt(tower.getAttribute('data-index'));
+      if (towerLevels[idx] < 6) {
+        if (balance >= 10) {
+          balance -= 10;
+          towerLevels[idx]++;
+          updateTowerVisual(tower, towerLevels[idx]);
+          towerStatus.textContent = `Upgraded Tower ${idx + 1} to level ${towerLevels[idx]}.`;
+          updateBalance();
+        } else {
+          towerStatus.textContent = 'Not enough balance to upgrade!';
+        }
+      } else {
+        towerStatus.textContent = `Tower ${idx + 1} is already at max level.`;
+      }
     });
   });
 
-  function updateBalanceUI() {
-    balanceDisplay.textContent = `Balance: ${balance.toFixed(4)} LTC`;
+  function updateTowerVisual(tower, level) {
+    const levels = tower.querySelectorAll('.tower-level');
+    levels.forEach((lvl, i) => {
+      if (i < level) {
+        lvl.style.backgroundColor = '#00ff00';
+        lvl.style.borderBottomColor = '#00cc00';
+      } else {
+        lvl.style.backgroundColor = '#007700';
+        lvl.style.borderBottomColor = '#003300';
+      }
+    });
+  }
+
+  collectIncomeBtn.addEventListener('click', () => {
+    let income = towerLevels.reduce((sum, lvl) => sum + lvl * 5, 0);
+    if (income > 0) {
+      balance += income;
+      updateBalance();
+      towerStatus.textContent = `Collected $${income} from all towers!`;
+    } else {
+      towerStatus.textContent = 'No income to collect. Upgrade towers!';
+    }
+  });
+
+  // --- MINES GAME ---
+  // Variables
+  const minesGrid = document.getElementById('minesGrid');
+  const betRange = document.getElementById('betRange');
+  const bombRange = document.getElementById('bombRange');
+  const betDisplay = document.getElementById('betDisplay');
+  const bombDisplay = document.getElementById('bombDisplay');
+  const startBtn = document.getElementById('startBtn');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+  const profitEl = document.getElementById('profit');
+  const bombSound = document.getElementById('bombSound');
+
+  let gameActive = false;
+  let bombs = [];
+  let openedCells = new Set();
+  let currentProfit = 0;
+  let betAmount = 1;
+  let bombCount = 3;
+
+  betRange.addEventListener('input', () => {
+    betAmount = parseInt(betRange.value);
+    betDisplay.textContent = betAmount.toFixed(2);
+  });
+  bombRange.addEventListener('input', () => {
+    bombCount = parseInt(bombRange.value);
+    bombDisplay.textContent = bombCount;
+  });
+
+  startBtn.addEventListener('click', () => {
+    if (balance < betAmount) {
+      alert('Not enough balance to place this bet.');
+      return;
+    }
+    startGame();
+  });
+
+  withdrawBtn.addEventListener('click', () => {
+    balance += currentProfit;
+    updateBalance();
+    profitEl.textContent = '0.00';
+    currentProfit = 0;
+    withdrawBtn.disabled = true;
+    startBtn.disabled = false;
+    minesGrid.innerHTML = '';
+    openedCells.clear();
+    gameActive = false;
+  });
+
+  function startGame() {
+    gameActive = true;
+    bombs = generateBombs(bombCount);
+    openedCells.clear();
+    currentProfit = 0;
+    profitEl.textContent = '0.00';
+    withdrawBtn.disabled = false;
+    startBtn.disabled = true;
+    balance -= betAmount;
+    updateBalance();
+    renderGrid();
+  }
+
+  // Generate unique bomb positions
+  function generateBombs(count) {
+    let bombPositions = new Set();
+    while (bombPositions.size < count) {
+      let pos = Math.floor(Math.random() * 25); // 0-24 for 5x5 grid
+      bombPositions.add(pos);
+    }
+    return Array.from(bombPositions);
+  }
+
+  // Render grid
+  function renderGrid() {
+    minesGrid.innerHTML = '';
+    for (let i = 0; i < 25; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.dataset.index = i;
+      cell.textContent = '💎';
+      cell.addEventListener('click', onCellClick);
+      minesGrid.appendChild(cell);
+    }
+  }
+
+  // Handle cell click
+  function onCellClick(e) {
+    if (!gameActive) return;
+
+    const idx = parseInt(e.target.dataset.index);
+    if (openedCells.has(idx)) return; // Already clicked
+
+    if (bombs.includes(idx)) {
+      // Bomb clicked - game over
+      e.target.classList.add('bomb');
+      e.target.textContent = '💣';
+      bombSound.play();
+      alert('Boom! You hit a bomb! You lost your bet.');
+      endGame(false);
+    } else {
+      // Safe cell
+      e.target.classList.add('safe');
+      e.target.textContent = '💎';
+      openedCells.add(idx);
+      updateProfit();
+    }
+  }
+
+  // Update profit based on opened safe cells
+  function updateProfit() {
+    // Basic profit formula: profit grows with safe clicks and bomb count (risk)
+    // More bombs = higher multiplier; each safe click increases profit by bet * multiplier * safe cells
+    const safeClicks = openedCells.size;
+    // Multiplier example: 1 + (bombCount * 0.15)
+    const multiplier = 1 + (bombCount * 0.15);
+    currentProfit = betAmount * multiplier * safeClicks;
+    profitEl.textContent = currentProfit.toFixed(2);
+  }
+
+  // End game reset
+  function endGame(won) {
+    gameActive = false;
+    withdrawBtn.disabled = true;
+    startBtn.disabled = false;
+    minesGrid.innerHTML = '';
+    openedCells.clear();
+    currentProfit = 0;
+    profitEl.textContent = '0.00';
+  }
+
+  // --- INITIALIZATION ---
+  function initializeGame() {
+    updateBalance();
+    // Reset Towers visuals
+    towers.forEach((tower, i) => updateTowerVisual(tower, towerLevels[i]));
+    towerStatus.textContent = 'Click on a tower to upgrade for $10. Each level increases income by $5.';
   }
 </script>
+
 </body>
 </html>
